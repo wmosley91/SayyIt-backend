@@ -16,7 +16,7 @@ class UserTags extends Migration
         Schema::create('userTags', function(Blueprint $table) {
           $table->increments('id');
           $table->integer('userID');
-          $table->integer('taggerID');
+          $table->string('ip');
           $table->integer('tagID');
           $table->timestamps();
         });

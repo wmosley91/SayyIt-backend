@@ -10,11 +10,6 @@ use Auth;
 
 class tagController extends Controller
 {
-    public function __construct() {
-      $this->middleware('jwt.auth', ['only' => ['store']]);
-    }
-
-
     public function store(Request $request, $id)
     {
       $rules = [
@@ -25,7 +20,6 @@ class tagController extends Controller
 
       if($validator->fails()) return Reponse::json(['error' => 'something went wrong (store tag function)']);
 
-      $user = Auth::user();
       $tags = $request->input('tags');
 
       foreach($tags as $key => $tag)
@@ -35,12 +29,12 @@ class tagController extends Controller
           $newTag = new Tag;
           $newTag->name = $tag;
           $newTag->count = 1;
-          $newTag->userID = $user->id;
+          $newTag->ip = $request->ip(); // this?
           $newTag->save();
 
           $userTag = new UserTag;
           $userTag->userID = $id;
-          $userTag->taggerID = $user->id;
+          $userTag->ip = $request->ip();; // this?
           $userTag->tagID = $newTag->id;
           $userTag->save();
         }
@@ -50,7 +44,7 @@ class tagController extends Controller
 
           $userTag = new UserTag;
           $userTag->userID = $id;
-          $userTag->taggerID = $user->id;
+          $userTag->ip = $request->ip(); // this?
           $userTag->tagID = $checkTag->id;
           $userTag->save();
         }
